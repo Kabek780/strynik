@@ -36,6 +36,12 @@ class SettingsTests(unittest.TestCase):
         settings = Settings.from_dict({"last_triggered_date": "not-a-date"})
         self.assertEqual(settings.last_triggered_date, "")
 
+    def test_malformed_weekdays_are_ignored(self) -> None:
+        for value in (5, None, {"monday": True}):
+            with self.subTest(value=value):
+                settings = Settings.from_dict({"weekdays": value})
+                self.assertEqual(settings.weekdays, [])
+
     def test_save_and_load_round_trip(self) -> None:
         with (
             tempfile.TemporaryDirectory() as directory,

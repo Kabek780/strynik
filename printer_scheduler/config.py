@@ -119,7 +119,12 @@ class Settings:
 
     def normalized_weekdays(self) -> list[int]:
         result: list[int] = []
-        for value in self.weekdays:
+        try:
+            values = list(self.weekdays or [])
+        except TypeError:
+            # Повреждённые настройки не должны мешать запуску приложения.
+            return result
+        for value in values:
             try:
                 day = int(value)
             except (TypeError, ValueError):
